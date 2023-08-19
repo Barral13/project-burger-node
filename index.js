@@ -1,9 +1,11 @@
 const express = require('express')
 const uuid = require('uuid')
 
-const port = 3000
+const port = 3001
 const server = express()
+const cors = require('cors')
 server.use(express.json())
+server.use(cors())
 
 const orders = []
 
@@ -32,21 +34,21 @@ server.get('/orders', (request, response) => {
 })
 
 server.post('/orders', (request, response) => {
-    const { order, clientName, price, status } = request.body
+    const { order, clientName } = request.body
     const id = uuid.v4()
 
-    const newOrder = { id, order, clientName, price, status }
+    const newOrder = { id, order, clientName }
     orders.push(newOrder)
 
     return response.status(201).json(newOrder)
 })
 
 server.put('/orders/:id', checkOrderId, (request, response) => {
-    const { order, clientName, price, status } = request.body
+    const { order, clientName } = request.body
     const index = request.index
     const id = request.userId
 
-    const updadeOrder = { id, order, clientName, price, status }
+    const updadeOrder = { id, order, clientName }
 
     orders[index] = updadeOrder
 
@@ -55,7 +57,6 @@ server.put('/orders/:id', checkOrderId, (request, response) => {
 
 server.delete('/orders/:id', checkOrderId, (request, response) => {
     const index = request.index
-
     orders.splice(index, 1)
 
     return response.status(204).json()
@@ -77,5 +78,5 @@ server.patch('/orders/:id', checkOrderId, (request, response) => {
 })
 
 server.listen(port, () => {
-    console.log(`=> Server started on port ${port} <=`)
+    console.log(`=> Server started <=`)
 })
